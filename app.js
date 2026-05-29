@@ -227,6 +227,68 @@
     if (originalImageDataUrl) openCropper(originalImageDataUrl);
   });
 
+  // ---------- OFFSCREEN BADGE RENDER ----------
+  async function renderBadgeOffscreen() {
+    const w = badge.offsetWidth;   // authored layout width (600), unaffected by transform
+    const h = badge.offsetHeight;  // authored layout height (600 or 750)
+
+    // Build an offscreen stage at the authored size, parked far off the visible viewport.
+    const stage = document.createElement('div');
+    stage.setAttribute('data-export-stage', '');
+    stage.style.cssText = [
+      'position: fixed',
+      'top: 0',
+      'left: -20000px',     // off-screen but still part of the layout/render tree
+      `width: ${w}px`,
+      `height: ${h}px`,
+      'pointer-events: none',
+      'background: transparent',
+      'z-index: -1',
+    ].join(';');
+
+    // Deep-clone the badge and strip the responsive transform.
+    const clone = badge.cloneNode(true);
+    clone.style.transform = 'none';
+    clone.style.position = 'static';
+    clone.style.top = 'auto';
+    clone.style.left = 'auto';
+    clone.style.margin = '0';
+    clone.style.width = w + 'px';
+    clone.style.height = h + 'px';
+
+    // Remove the "Editar foto" UI button from the clone (don't want it in the PNG).
+    clone.querySelectorAll('.edit-photo-btn').forEach((el) => el.remove());
+
+    stage.appendChild(clone);
+    document.body.appendChild(stage);
+
+    try {
+      // Wait for every <img> in the clone to be fully decoded — fixes blank photo on mobile.
+      const imgs = Array.from(clone.querySelectorAll('img'));
+      await Promise.all(
+        imgs.map((img) => {
+          if (img.complete && img.naturalWidth > 0) return Promise.resolve();
+          return new Promise((res) => {
+            img.onload = res;
+            img.onerror = res;
+          });
+        })
+      );
+      // Extra frame to ensure layout settled.
+      await new Promise((r) => requestAnimationFrame(() => requestAnimationFrame(r)));
+
+      return await htmlToImage.toPng(clone, {
+        pixelRatio: 2,
+        cacheBust: true,
+        skipFonts: true,
+        width: w,
+        height: h,
+      });
+    } finally {
+      stage.remove();
+    }
+  }
+
   // ---------- DOWNLOAD ----------
   downloadBtn.addEventListener('click', async () => {
     if (!validateForm()) return;
@@ -235,34 +297,13 @@
     downloadBtn.innerHTML = 'Generando…';
 
     try {
-      // html-to-image: pixelRatio 2 → exports at 2x device pixels (sharp on retina).
-      // Uses SVG foreignObject under the hood so background-clip:text and writing-mode render correctly.
-      // Authored badge size (layout box, NOT visual size).
-      // On mobile we apply transform: scale() + position: absolute to shrink the preview.
-      // For the export we want the FULL authored size, so we read offset dims and override
-      // the clone's transform/position so html-to-image captures it un-scaled.
-      const exportW = badge.offsetWidth;
-      const exportH = badge.offsetHeight;
-
-      const dataUrl = await htmlToImage.toPng(badge, {
-        pixelRatio: 2,
-        cacheBust: true,
-        skipFonts: true,
-        width: exportW,
-        height: exportH,
-        style: {
-          transform: 'none',
-          position: 'static',
-          top: 'auto',
-          left: 'auto',
-          margin: '0',
-        },
-        // Filter out UI-only controls (the "Editar foto" button) so they don't appear in the exported PNG.
-        filter: (node) => {
-          if (node.classList && node.classList.contains('edit-photo-btn')) return false;
-          return true;
-        },
-      });
+      // We render an OFFSCREEN CLONE of the badge instead of the live one.
+      // Why: on mobile the live badge has transform: scale() + position: absolute (responsive
+      // preview). html-to-image picked up that transformed layout and the photo failed to render
+      // even with style overrides because the container query + scale combo confused the layout.
+      // The clone lives in an isolated offscreen container at the authored 600x{600|750} dims,
+      // with all transforms reset, so html-to-image captures it cleanly.
+      const dataUrl = await renderBadgeOffscreen();
       const link = document.createElement('a');
       const safe = (inputName.value || 'asistente').trim().replace(/\s+/g, '_');
       link.download = `Badge_AISummit2026_${safe}.png`;
