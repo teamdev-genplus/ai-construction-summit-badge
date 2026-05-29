@@ -17,8 +17,12 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
 
-<!-- html-to-image: renderiza DOM vía SVG foreignObject (soporta background-clip:text, writing-mode, transforms, etc) -->
-<script src="https://cdn.jsdelivr.net/npm/html-to-image@1.11.13/dist/html-to-image.min.js"></script>
+<!-- modern-screenshot: fork de html-to-image con fixes específicos para Safari iOS. ESM-only en v4.7+, lo importamos y exponemos en window. -->
+<script type="module">
+  import * as modernScreenshot from 'https://cdn.jsdelivr.net/npm/modern-screenshot@4.7.0/+esm';
+  window.modernScreenshot = modernScreenshot;
+  window.dispatchEvent(new Event('modernScreenshotReady'));
+</script>
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/cropperjs@1.6.2/dist/cropper.min.css" />
 <script src="https://cdn.jsdelivr.net/npm/cropperjs@1.6.2/dist/cropper.min.js"></script>
 
@@ -209,6 +213,6 @@
   </div>
 </div>
 
-<script src="app.js?v=12"></script>
+<script src="app.js?v=14"></script>
 </body>
 </html>

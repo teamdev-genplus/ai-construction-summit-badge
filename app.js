@@ -227,8 +227,23 @@
     if (originalImageDataUrl) openCropper(originalImageDataUrl);
   });
 
+  // Wait for modern-screenshot ESM module to be ready before rendering.
+  function waitForModernScreenshot() {
+    if (window.modernScreenshot) return Promise.resolve();
+    return new Promise((res) => {
+      const onReady = () => { window.removeEventListener('modernScreenshotReady', onReady); res(); };
+      window.addEventListener('modernScreenshotReady', onReady);
+      // Safety timeout
+      setTimeout(res, 5000);
+    });
+  }
+
   // ---------- OFFSCREEN BADGE RENDER ----------
   async function renderBadgeOffscreen() {
+    await waitForModernScreenshot();
+    if (!window.modernScreenshot) {
+      throw new Error('La librería de exportación no cargó. Revisa tu conexión y reintenta.');
+    }
     const w = badge.offsetWidth;   // authored layout width (600), unaffected by transform
     const h = badge.offsetHeight;  // authored layout height (600 or 750)
 
@@ -263,27 +278,45 @@
     document.body.appendChild(stage);
 
     try {
-      // Wait for every <img> in the clone to be fully decoded — fixes blank photo on mobile.
+      // Wait for every <img> in the clone to be fully decoded via the Image Decode API.
+      // This is more reliable than just onload — it guarantees the pixels are ready.
       const imgs = Array.from(clone.querySelectorAll('img'));
-      await Promise.all(
-        imgs.map((img) => {
-          if (img.complete && img.naturalWidth > 0) return Promise.resolve();
-          return new Promise((res) => {
-            img.onload = res;
-            img.onerror = res;
-          });
-        })
-      );
-      // Extra frame to ensure layout settled.
+      await Promise.all(imgs.map(async (img) => {
+        try {
+          // Force load if not started
+          if (!img.complete) {
+            await new Promise((res) => { img.onload = res; img.onerror = res; });
+          }
+          // decode() returns a promise that resolves when the image is fully decoded
+          if (typeof img.decode === 'function') {
+            await img.decode().catch(() => {}); // ignore decode errors, fallback to whatever loaded
+          }
+        } catch (_) {}
+      }));
+      // Extra paint cycle so layout/styles fully settled.
       await new Promise((r) => requestAnimationFrame(() => requestAnimationFrame(r)));
 
-      return await htmlToImage.toPng(clone, {
-        pixelRatio: 2,
-        cacheBust: true,
-        skipFonts: true,
+      // modern-screenshot has Safari-specific fixes baked in (fixSvgXmlDecode, drawImageInterval).
+      const opts = {
+        scale: 2,
         width: w,
         height: h,
-      });
+        backgroundColor: 'transparent',
+        // Safari fixes — kept default unless we need to tune
+        fixSvgXmlDecode: true,
+        // skip CORS @font-face inlining to avoid CSP / CORS noise
+        font: false,
+      };
+
+      // KNOWN ISSUE: on iOS Safari the first render call sometimes returns an image with
+      // missing photos (foreignObject + <img> data URI quirk). Render once, throw the
+      // result away, then render again. Second call is reliable.
+      // https://github.com/bubkoo/html-to-image/issues/361
+      // https://github.com/bubkoo/html-to-image/issues/461
+      const warmup = await modernScreenshot.domToPng(clone, opts);
+      void warmup; // discard
+      const dataUrl = await modernScreenshot.domToPng(clone, opts);
+      return dataUrl;
     } finally {
       stage.remove();
     }
