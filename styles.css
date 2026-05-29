@@ -583,6 +583,7 @@ body {
   font-weight: 600;
   font-size: 17px;
   line-height: 1.05;
+  white-space: nowrap;   /* keep "17 y 18" on one line; SVG foreignObject sometimes mis-measures and wraps */
 }
 .badge__date-month {
   margin: 0 0 4px;

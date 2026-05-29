@@ -240,10 +240,12 @@
       const dataUrl = await htmlToImage.toPng(badge, {
         pixelRatio: 2,
         cacheBust: true,
-        // skipFonts: true → no intenta inlinear @font-face cross-origin (Google Fonts).
-        // Las fuentes ya están renderizadas en el browser, así que el PNG queda igual,
-        // pero evitamos errores de CORS en consola.
         skipFonts: true,
+        // Filter out UI-only controls (the "Editar foto" button) so they don't appear in the exported PNG.
+        filter: (node) => {
+          if (node.classList && node.classList.contains('edit-photo-btn')) return false;
+          return true;
+        },
       });
       const link = document.createElement('a');
       const safe = (inputName.value || 'asistente').trim().replace(/\s+/g, '_');
