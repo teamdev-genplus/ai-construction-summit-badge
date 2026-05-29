@@ -72,8 +72,9 @@ body {
     gap: 28px;
     padding: 24px 18px 60px;
   }
-  /* On mobile show preview FIRST so users see the badge updating while filling the form below */
-  .preview-panel { order: -1; }
+  /* Mobile order: form on top (user starts typing immediately), preview below */
+  .form-panel { order: 1; }
+  .preview-panel { order: 2; }
   .form-title { font-size: 28px; }
   .form-sub { font-size: 14px; }
   .topbar { padding: 14px 18px; }
