@@ -22,7 +22,7 @@
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/cropperjs@1.6.2/dist/cropper.min.css" />
 <script src="https://cdn.jsdelivr.net/npm/cropperjs@1.6.2/dist/cropper.min.js"></script>
 
-<link rel="stylesheet" href="styles.css?v=14" />
+<link rel="stylesheet" href="styles.css?v=17" />
 </head>
 <body>
 <header class="topbar">
@@ -120,6 +120,7 @@
   <!-- RIGHT: BADGE PREVIEW -->
   <section class="preview-panel">
     <div class="preview-wrap">
+      <div class="badge-frame" id="badgeFrame">
       <div id="badge" class="badge badge--4-5">
         <!-- LEFT COLUMN: photo (top) + info (bottom) -->
         <div class="badge__left">
@@ -162,7 +163,8 @@
         </div>
       </div>
 
-      <p class="preview-help">Vista previa en vivo · al descargar se exporta en 1080×1080 px para Instagram/LinkedIn.</p>
+      </div>
+      <p class="preview-help">Vista previa en vivo · al descargar se exporta en 1080×1350 (4:5) o 1080×1080 (1:1).</p>
     </div>
   </section>
 </main>

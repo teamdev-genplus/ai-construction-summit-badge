@@ -67,7 +67,23 @@ body {
   padding: 56px 32px 96px;
 }
 @media (max-width: 960px) {
-  .layout { grid-template-columns: 1fr; gap: 32px; padding: 32px 18px 64px; }
+  .layout {
+    grid-template-columns: 1fr;
+    gap: 28px;
+    padding: 24px 18px 60px;
+  }
+  /* On mobile show preview FIRST so users see the badge updating while filling the form below */
+  .preview-panel { order: -1; }
+  .form-title { font-size: 28px; }
+  .form-sub { font-size: 14px; }
+  .topbar { padding: 14px 18px; }
+  .topbar__cta { font-size: 13px; padding: 8px 14px; }
+}
+@media (max-width: 480px) {
+  .layout { padding: 16px 14px 48px; gap: 22px; }
+  .form-title { font-size: 24px; }
+  .topbar__name { display: none; }
+  .topbar__cta { font-size: 12px; padding: 7px 12px; }
 }
 
 /* ----------- FORM ----------- */
@@ -323,6 +339,9 @@ body {
   grid-template-columns: 1fr 1fr;
   gap: 10px;
 }
+@media (max-width: 380px) {
+  .ratio-toggle { grid-template-columns: 1fr; }
+}
 .ratio-toggle input[type="radio"] { position: absolute; opacity: 0; pointer-events: none; }
 .ratio-toggle__opt {
   display: flex;
@@ -363,6 +382,11 @@ body {
   gap: 14px;
   margin-top: 6px;
   flex-wrap: wrap;
+}
+@media (max-width: 480px) {
+  .actions { flex-direction: column; align-items: stretch; }
+  .btn--primary { width: 100%; justify-content: center; }
+  .share { justify-content: center; }
 }
 .btn {
   display: inline-flex;
@@ -414,7 +438,30 @@ body {
   gap: 14px;
   width: 100%;
 }
-.preview-help { font-size: 12.5px; color: var(--ink-soft); }
+.preview-help { font-size: 12.5px; color: var(--ink-soft); text-align: center; }
+
+/* The badge frame is a scalable wrapper. The badge inside is ALWAYS authored at 600x{600|750},
+   so html-to-image exports always at full quality regardless of preview size.
+   The frame uses container queries: it scales the badge proportionally to its actual width.
+   transform: scale + origin top-left lets the badge shrink visually without affecting export. */
+.badge-frame {
+  width: 100%;
+  max-width: 600px;
+  container-type: inline-size;
+  position: relative;
+  aspect-ratio: 600 / 750;   /* default for 4:5 */
+}
+.badge-frame:has(.badge--1-1) { aspect-ratio: 1 / 1; }
+.badge-frame > .badge {
+  /* Position absolute so the un-scaled layout box doesn't push the frame's height.
+     Then the frame can honor its aspect-ratio cleanly. */
+  position: absolute;
+  top: 0;
+  left: 0;
+  /* Divide length by length → unitless ratio. 600px = authored badge width. */
+  transform: scale(calc(100cqw / 600px));
+  transform-origin: top left;
+}
 
 /* ============================================================
    BADGE
