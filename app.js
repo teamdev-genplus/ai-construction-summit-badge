@@ -237,10 +237,26 @@
     try {
       // html-to-image: pixelRatio 2 → exports at 2x device pixels (sharp on retina).
       // Uses SVG foreignObject under the hood so background-clip:text and writing-mode render correctly.
+      // Authored badge size (layout box, NOT visual size).
+      // On mobile we apply transform: scale() + position: absolute to shrink the preview.
+      // For the export we want the FULL authored size, so we read offset dims and override
+      // the clone's transform/position so html-to-image captures it un-scaled.
+      const exportW = badge.offsetWidth;
+      const exportH = badge.offsetHeight;
+
       const dataUrl = await htmlToImage.toPng(badge, {
         pixelRatio: 2,
         cacheBust: true,
         skipFonts: true,
+        width: exportW,
+        height: exportH,
+        style: {
+          transform: 'none',
+          position: 'static',
+          top: 'auto',
+          left: 'auto',
+          margin: '0',
+        },
         // Filter out UI-only controls (the "Editar foto" button) so they don't appear in the exported PNG.
         filter: (node) => {
           if (node.classList && node.classList.contains('edit-photo-btn')) return false;
