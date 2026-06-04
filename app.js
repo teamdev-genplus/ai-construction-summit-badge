@@ -7,8 +7,8 @@
   const inputPhoto = $('inputPhoto');
   const uploadBox = $('uploadBox');
 
-  const badgeFirstName = $('badgeFirstName');
-  const badgeLastName = $('badgeLastName');
+  // v2 design: single name element (uppercase), role + company stacked right
+  const badgeName = $('badgeName');
   const badgeRole = $('badgeRole');
   const badgeCompany = $('badgeCompany');
   const badgePhoto = $('badgePhoto');
@@ -17,53 +17,18 @@
   const badge = $('badge');
 
   // ---------- LIVE BINDINGS ----------
-  function splitName(full) {
-    // Convención LatAm:
-    // 2 palabras → 1 nombre + 1 apellido
-    // 3 palabras → 1 nombre + 2 apellidos    (ej: "Fabrizio Villafuerte Diaz")
-    // 4+ palabras → 2 nombres + resto apellidos (ej: "José Luis Espinoza Reyes")
-    const parts = (full || '').trim().split(/\s+/).filter(Boolean);
-    if (parts.length === 0) return { first: '', rest: '' };
-    if (parts.length === 1) return { first: parts[0], rest: '' };
-    const nombresCount = parts.length >= 4 ? 2 : 1;
-    return {
-      first: parts.slice(0, nombresCount).join(' '),
-      rest: parts.slice(nombresCount).join(' ')
-    };
-  }
-
-  function bindText(input, target, fallback) {
+  function bindText(input, target, transform) {
     const apply = () => {
-      const v = input.value.trim();
-      target.textContent = v || fallback;
+      const v = (input.value || '').trim();
+      target.textContent = transform ? transform(v) : v;
     };
     input.addEventListener('input', apply);
     apply();
   }
 
-  // Name has split rendering
-  function applyName() {
-    const v = inputName.value.trim() || 'Fabrizio Villafuerte Diaz';
-    const { first, rest } = splitName(v);
-    badgeFirstName.textContent = first;
-    badgeLastName.textContent = rest;
-  }
-  inputName.addEventListener('input', applyName);
-  applyName();
-
-  // Role and company mirror the input EXACTLY — empty when empty (no demo fallback).
-  bindText(inputRole, badgeRole, '');
-  bindText(inputCompany, badgeCompany, '');
-
-  // ---------- RATIO TOGGLE ----------
-  const ratioInputs = document.querySelectorAll('input[name="ratio"]');
-  ratioInputs.forEach((input) => {
-    input.addEventListener('change', () => {
-      if (!input.checked) return;
-      badge.classList.remove('badge--1-1', 'badge--4-5');
-      badge.classList.add(`badge--${input.value}`);
-    });
-  });
+  bindText(inputName, badgeName, (v) => v.toUpperCase());
+  bindText(inputRole, badgeRole);
+  bindText(inputCompany, badgeCompany);
 
   // ---------- PHOTO UPLOAD + CROP ----------
   // Original uploaded image (so user can re-edit / re-crop without losing the source).
@@ -121,10 +86,8 @@
 
   // ----- CROPPER MODAL -----
   function currentPhotoAspect() {
-    // The badge photo area aspect ratio depends on the current badge mode.
-    // 4:5 mode: 450 wide x 465 tall ≈ 0.968
-    // 1:1 mode: 450 wide x 372 tall ≈ 1.21
-    return badge.classList.contains('badge--4-5') ? (450 / 465) : (450 / 372);
+    // v2 design: photo wrap has CSS aspect-ratio 5/4 (landscape per mockup).
+    return 5 / 4;
   }
 
   function openCropper(srcDataUrl) {

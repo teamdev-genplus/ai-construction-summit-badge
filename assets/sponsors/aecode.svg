@@ -1,0 +1,14 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 180 70" preserveAspectRatio="xMidYMid meet">
+  <!-- AECODE wordmark — Ingeniería & Construcción Moderna -->
+  <defs>
+    <linearGradient id="aecodeGrad" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" stop-color="#2dd4bf"/>
+      <stop offset="55%" stop-color="#3b82f6"/>
+      <stop offset="100%" stop-color="#7c3aed"/>
+    </linearGradient>
+  </defs>
+  <g font-family="Arial, Helvetica, sans-serif">
+    <text x="6" y="36" font-size="30" font-weight="900" letter-spacing="-1" fill="url(#aecodeGrad)">AECODE</text>
+    <text x="6" y="54" font-size="8" font-weight="600" fill="#3a3a55" letter-spacing="0.6">Ingeniería &amp; Construcción Moderna</text>
+  </g>
+</svg>

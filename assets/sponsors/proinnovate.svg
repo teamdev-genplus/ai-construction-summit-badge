@@ -1,0 +1,15 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 170 70" preserveAspectRatio="xMidYMid meet">
+  <!-- PRO Innovate approximation -->
+  <g transform="translate(6 12)">
+    <!-- starburst icon: 4 yellow blades -->
+    <g transform="translate(20 22)">
+      <path d="M0 -18 L4 -4 L18 0 L4 4 L0 18 L-4 4 L-18 0 L-4 -4 Z" fill="#FFD93D"/>
+      <circle cx="0" cy="0" r="6" fill="#10B981"/>
+    </g>
+  </g>
+  <g font-family="Arial, Helvetica, sans-serif" fill="#0a0a23">
+    <text x="58" y="35" font-size="22" font-weight="800" fill="#0a0a23" letter-spacing="-0.5">PRO</text>
+    <text x="98" y="35" font-size="22" font-weight="800" fill="#10B981" letter-spacing="-0.5">innóvate</text>
+    <text x="58" y="50" font-size="6.5" font-weight="600" letter-spacing="1.2" fill="#4a4a6a">PROGRAMA NACIONAL DE INNOVACIÓN</text>
+  </g>
+</svg>

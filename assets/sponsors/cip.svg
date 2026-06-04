@@ -1,0 +1,17 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 160 80" preserveAspectRatio="xMidYMid meet">
+  <!-- CIP Lima shield approximation -->
+  <g transform="translate(8 8)">
+    <path d="M0 0 L46 0 L46 50 L23 64 L0 50 Z" fill="#E04F2C"/>
+    <path d="M2 2 L44 2 L44 49 L23 61 L2 49 Z" fill="none" stroke="#FFEEAA" stroke-width="1.5"/>
+    <!-- Inner cross/figure -->
+    <rect x="18" y="14" width="10" height="34" fill="#FFD24A"/>
+    <rect x="12" y="22" width="22" height="8" fill="#FFD24A"/>
+    <!-- bottom label -->
+    <text x="23" y="58" text-anchor="middle" font-family="Arial, sans-serif" font-size="6" font-weight="700" fill="#FFEEAA">CIP</text>
+  </g>
+  <g font-family="Arial, Helvetica, sans-serif" fill="#0a0a23">
+    <text x="62" y="32" font-size="9.5" font-weight="800" letter-spacing="0.5">CONSEJO DEPARTAMENTAL</text>
+    <text x="62" y="44" font-size="9.5" font-weight="800" letter-spacing="0.5">DE LIMA</text>
+    <text x="62" y="58" font-size="7.5" font-weight="500" fill="#3a3a55">CAPÍTULO DE INGENIERÍA CIVIL</text>
+  </g>
+</svg>

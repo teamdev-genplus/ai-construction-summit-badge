@@ -334,46 +334,7 @@ body {
 .upload-box__inner span { font-size: 12px; }
 .upload-box svg { color: var(--grad-violet); }
 
-/* ----------- RATIO TOGGLE ----------- */
-.ratio-toggle {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 10px;
-}
-@media (max-width: 380px) {
-  .ratio-toggle { grid-template-columns: 1fr; }
-}
-.ratio-toggle input[type="radio"] { position: absolute; opacity: 0; pointer-events: none; }
-.ratio-toggle__opt {
-  display: flex;
-  align-items: center;
-  gap: 12px;
-  padding: 12px 14px;
-  border: 1.5px solid var(--line);
-  border-radius: 12px;
-  background: var(--surface);
-  cursor: pointer;
-  transition: border-color .15s ease, background .15s ease, box-shadow .15s ease;
-}
-.ratio-toggle__opt:hover { border-color: #c8c9e0; }
-.ratio-toggle input:checked + .ratio-toggle__opt {
-  border-color: var(--grad-violet);
-  background: linear-gradient(180deg, #fbfaff 0%, #f3eeff 100%);
-  box-shadow: 0 0 0 4px rgba(124,58,237,0.10);
-}
-.ratio-toggle__icon {
-  flex-shrink: 0;
-  border: 2px solid #b9bad1;
-  border-radius: 4px;
-  background: #fff;
-}
-.ratio-toggle input:checked + .ratio-toggle__opt .ratio-toggle__icon {
-  border-color: var(--grad-violet);
-}
-.ratio-toggle__icon--11 { width: 24px; height: 24px; }
-.ratio-toggle__icon--45 { width: 22px; height: 28px; }
-.ratio-toggle__txt strong { display: block; font-size: 13px; color: var(--ink); }
-.ratio-toggle__txt small { font-size: 11px; color: var(--ink-soft); }
+/* (ratio toggle removed in v2 — fixed 4:5 design) */
 
 /* ----------- ACTIONS ----------- */
 .actions {
@@ -441,234 +402,288 @@ body {
 }
 .preview-help { font-size: 12.5px; color: var(--ink-soft); text-align: center; }
 
-/* The badge frame is a scalable wrapper. The badge inside is ALWAYS authored at 600x{600|750},
-   so html-to-image exports always at full quality regardless of preview size.
-   The frame uses container queries: it scales the badge proportionally to its actual width.
-   transform: scale + origin top-left lets the badge shrink visually without affecting export. */
+/* ============================================================
+   BADGE FRAME — responsive scale wrapper.
+   Authored size: 600x750 (4:5). Export via 2x = 1200x1500 ≈ 1080x1350 target.
+   transform: scale(100cqw / 600px) shrinks the visual preview without
+   changing the DOM layout box → export quality preserved.
+   ============================================================ */
 .badge-frame {
   width: 100%;
   max-width: 600px;
   container-type: inline-size;
   position: relative;
-  aspect-ratio: 600 / 750;   /* default for 4:5 */
+  aspect-ratio: 4 / 5;
 }
-.badge-frame:has(.badge--1-1) { aspect-ratio: 1 / 1; }
-.badge-frame > .badge {
-  /* Position absolute so the un-scaled layout box doesn't push the frame's height.
-     Then the frame can honor its aspect-ratio cleanly. */
+.badge-frame > .scene {
   position: absolute;
   top: 0;
   left: 0;
-  /* Divide length by length → unitless ratio. 600px = authored badge width. */
+  width: 600px;
+  height: 750px;
   transform: scale(calc(100cqw / 600px));
   transform-origin: top left;
 }
 
 /* ============================================================
-   BADGE
-   Two authored sizes:
-     .badge--1-1  → 600x600  (1:1, exports at 2x = 1200x1200)
-     .badge--4-5  → 600x750  (4:5, exports at 2x = 1200x1500)
-   Layout: 2 columns (left 75% / right 25%) with rows inside each.
+   SCENE — the EXPORT target (dark bg + card + sponsors)
    ============================================================ */
-.badge {
-  position: relative;
-  width: 600px;
-  border-radius: 14px;
+.scene {
+  background: linear-gradient(135deg, #0d0938 0%, #2d1b69 45%, #4c1d95 85%, #6d28d9 100%);
+  border-radius: 16px;
   overflow: hidden;
-  display: flex;
-  background: #f3f1ec;
-  box-shadow: var(--shadow-lg);
+  padding: 18px 36px 0;
   font-family: 'Inter', sans-serif;
+  display: flex;
+  flex-direction: column;
+  box-shadow: var(--shadow-lg);
+  color: white;
 }
-.badge--1-1 { height: 600px; }
-.badge--4-5 { height: 750px; }
+.scene__hashtag {
+  position: absolute;
+  top: 22px;
+  right: 30px;
+  color: #ffffff;
+  font-size: 19px;
+  font-weight: 700;
+  font-style: italic;
+  letter-spacing: 0.01em;
+  z-index: 3;
+  text-shadow: 0 2px 4px rgba(0,0,0,0.35);
+}
 
-/* ----------- LEFT COLUMN ----------- */
-.badge__left {
-  width: 450px;        /* fixed 75% of 600 */
-  flex: 0 0 450px;
+/* ============================================================
+   CARD — the white badge that sits centered in the scene
+   ============================================================ */
+.card {
+  margin: 36px auto 14px;
+  width: 410px;
+  background: #ffffff;
+  border-radius: 14px;
+  position: relative;
+  padding: 28px 22px 0;
+  box-shadow: 0 22px 50px -22px rgba(0,0,0,0.55);
   display: flex;
   flex-direction: column;
 }
 
-.badge__photo-wrap {
-  position: relative;
-  flex: 0 0 62%;
-  background: #efece6;
-  overflow: hidden;
+/* ----- Decorative metal clip on top of the card ----- */
+.card__clip {
+  position: absolute;
+  top: -20px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 54px;
+  height: 26px;
+  background: linear-gradient(180deg, #2a2a44 0%, #0a0a23 100%);
+  border-radius: 5px 5px 13px 13px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 4px 8px -2px rgba(0,0,0,0.4);
 }
-.badge__photo {
+.card__clip-hole {
+  width: 20px;
+  height: 8px;
+  background: linear-gradient(180deg, #444 0%, #888 50%, #444 100%);
+  border-radius: 50%;
+  border: 1px solid #1a1a2a;
+}
+
+/* ----- Logo at top (color, not white) ----- */
+.card__logo {
+  display: flex;
+  justify-content: center;
+  margin-bottom: 14px;
+}
+.card__logo img {
+  width: 250px;
+  height: auto;
+  filter: drop-shadow(0 2px 4px rgba(0,0,0,0.12));
+}
+
+/* ----- Photo (rectangular, light gray placeholder) ----- */
+.card__photo-wrap {
+  position: relative;
+  width: 100%;
+  aspect-ratio: 5 / 4;     /* landscape per mockup (Yudely's photo is wider than tall) */
+  background: #e8e8ee;
+  border-radius: 6px;
+  overflow: hidden;
+  margin-bottom: 12px;
+}
+.card__photo {
   position: absolute;
   inset: 0;
-  background: linear-gradient(180deg, #efece6 0%, #d9d6cf 100%);
-  overflow: hidden;
+  background: linear-gradient(180deg, #ebebf0 0%, #d2d2dc 100%);
 }
-.badge__photo img { width: 100%; height: 100%; object-fit: cover; display: block; }
-.badge__photo-placeholder {
+.card__photo img { width: 100%; height: 100%; object-fit: cover; display: block; }
+.card__photo-placeholder {
   position: absolute; inset: 0;
-  display: flex; flex-direction: column; align-items: center; justify-content: center;
-  gap: 10px; color: #9c9aa6; font-size: 13px; font-weight: 500;
-}
-.badge__orga {
-  position: absolute;
-  top: 14px;
-  right: 6px;
-  writing-mode: vertical-rl;
-  transform: rotate(180deg);
-  font-size: 10px;
-  letter-spacing: 0.04em;
-  color: #15172e;        /* darker, like the mockup */
-  font-weight: 600;
-  white-space: nowrap;
-  z-index: 2;
-  height: auto;
-  opacity: 0.85;
+  display: flex; flex-direction: column;
+  align-items: center; justify-content: center;
+  gap: 8px;
+  color: #9c9aa6;
+  font-size: 12px;
+  font-weight: 500;
 }
 
-.badge__info {
+/* ----- Info row: name (LEFT) + meta (RIGHT) ----- */
+.card__info {
+  display: flex;
+  gap: 14px;
+  align-items: flex-start;
+  margin-bottom: 14px;
+  padding: 0 2px;
+}
+.card__name {
   flex: 1;
-  padding: 22px 26px 24px;
-  background: #eef0fa;
+  margin: 0;
+  font-size: 20px;
+  font-weight: 800;
+  line-height: 1.08;
+  letter-spacing: -0.02em;
+  color: #0a0a23;
+  text-transform: uppercase;
+  word-break: break-word;
+  hyphens: auto;
+}
+.card__meta {
+  width: 145px;
+  text-align: right;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 3px;
+}
+.card__role {
+  margin: 0;
+  font-size: 10px;
+  color: #2a2a4a;
+  font-weight: 500;
+  line-height: 1.3;
+  text-align: right;
+}
+.card__role:empty { display: none; }
+.card__company {
+  margin: 2px 0 0;
+  font-size: 11px;
+  font-weight: 800;
+  color: #0a0a23;
+  letter-spacing: 0.02em;
+}
+.card__company:empty { display: none; }
+.card__pill {
+  display: inline-block;
+  margin-top: 8px;
+  background: linear-gradient(95deg, #3b82f6 0%, #7c3aed 100%);
+  color: white;
+  font-size: 10.5px;
+  font-weight: 700;
+  letter-spacing: 0.09em;
+  padding: 7px 20px;
+  border-radius: 6px;
+  box-shadow: 0 4px 10px -3px rgba(59, 130, 246, 0.45);
+  text-align: center;
+}
+
+/* ----- Bottom bar (CTA left + Date right) ----- */
+.card__bottom {
+  display: flex;
+  border-radius: 0 0 14px 14px;
+  overflow: hidden;
+  margin: 0 -22px;   /* extend to card edges */
+}
+.card__cta {
+  flex: 1;
+  background: linear-gradient(120deg, #3b82f6 0%, #2563eb 60%, #1e40af 100%);
+  color: white;
+  padding: 14px 18px;
   display: flex;
   flex-direction: column;
   justify-content: center;
 }
-.badge__role-tag {
-  margin: 0 0 10px;
-  font-size: 22px;
-  font-weight: 800;
-  color: #0a0a23;
-  letter-spacing: -0.015em;
-}
-.badge__name {
-  margin: 0 0 14px;
-  font-size: 30px;
-  line-height: 1.04;
-  letter-spacing: -0.02em;
-  font-weight: 700;
-  color: #0a0a23;
-  word-break: break-word;
-  display: flex;
-  flex-direction: column;
-  gap: 0;
-}
-.badge__name-first {
-  background: linear-gradient(95deg, #2dd4bf 0%, #3b82f6 55%, #7c3aed 100%);
-  -webkit-background-clip: text;
-  background-clip: text;
-  color: transparent;
-  font-weight: 800;
-  display: block;
-}
-.badge__name-rest {
-  display: block;
-  color: #0a0a23;
-  font-weight: 700;
-}
-.badge__job {
+.card__cta p {
   margin: 0;
-  font-size: 12.5px;
-  color: #2a2a4a;
-  line-height: 1.4;
+  font-size: 10.5px;
+  line-height: 1.35;
   font-weight: 500;
 }
-.badge__job-line { display: block; }
-.badge__job-line:empty { display: none; }
-.badge__job:not(:has(.badge__job-line:not(:empty))) { display: none; }
-/* 4:5 mode gets more room → larger typography */
-.badge--4-5 .badge__role-tag { font-size: 24px; }
-.badge--4-5 .badge__name { font-size: 36px; margin-bottom: 18px; }
-.badge--4-5 .badge__job { font-size: 14px; }
-.badge--4-5 .badge__info { padding: 28px 30px 32px; }
-
-/* ----------- RIGHT COLUMN ----------- */
-.badge__right {
-  width: 150px;        /* fixed 25% of 600 */
-  flex: 0 0 150px;
-  display: flex;
-  flex-direction: column;
-  overflow: hidden;
+.card__cta-url {
+  font-weight: 800 !important;
+  font-size: 13px !important;
+  margin-top: 4px !important;
+  letter-spacing: -0.01em;
+  color: #ffffff !important;
 }
-
-/* Top: gradient band with rotated logo */
-.badge__brand {
-  flex: 0 0 62%;
-  background: linear-gradient(170deg, #4dd3ff 0%, #3b82f6 30%, #6d28d9 75%, #4c1d95 100%);
-  position: relative;
-  overflow: hidden;
-}
-/* SVG native is 776x163 (~4.76:1 ratio). Rotated -90deg so it reads bottom→top.
-   Width here = the rotated VISUAL HEIGHT after rotation. We size aggressively so
-   the "2026" pill at the top and big "AI" letters at the bottom are clearly visible. */
-.badge__brand img {
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  width: 318px;       /* 1:1 mode: band 372px, ~27px breathing top/bottom */
-  height: auto;
-  transform: translate(-50%, -50%) rotate(-90deg);
-  transform-origin: center center;
-  filter: brightness(0) invert(1) drop-shadow(0 3px 6px rgba(0,0,0,0.18));
-  max-width: none;
-}
-.badge--4-5 .badge__brand img { width: 410px; }  /* 4:5 mode: band 465px, ~27px breathing */
-
-/* Middle: dark date block */
-.badge__date {
-  flex: 0 0 23%;
+.card__date {
+  width: 134px;
   background: #0a0a23;
   color: white;
-  padding: 12px 6px 10px;
+  padding: 12px 14px;
   text-align: center;
   display: flex;
   flex-direction: column;
-  align-items: center;
   justify-content: center;
 }
-.badge__date-day {
+.card__date-day {
   margin: 0;
-  font-weight: 600;
-  font-size: 17px;
-  line-height: 1.05;
-  white-space: nowrap;   /* keep "17 y 18" on one line; SVG foreignObject sometimes mis-measures and wraps */
+  font-size: 22px;
+  font-weight: 800;
+  letter-spacing: -0.02em;
+  line-height: 1;
+  white-space: nowrap;
 }
-.badge__date-month {
-  margin: 0 0 4px;
+.card__date-month {
+  margin: 2px 0 6px;
+  font-size: 11px;
   font-weight: 700;
-  font-size: 26px;
-  line-height: 1.0;
-  letter-spacing: -0.01em;
+  letter-spacing: 0.04em;
 }
-.badge__date-venue {
+.card__date-venue {
   margin: 0;
-  font-size: 9.5px;
+  font-size: 8.5px;
   color: #c8c8de;
   font-weight: 500;
-  letter-spacing: 0.02em;
+  line-height: 1.3;
 }
 
-/* Bottom: purple URL block with arrow */
-.badge__url {
-  flex: 1;
-  background: linear-gradient(135deg, #7c3aed 0%, #5b21b6 100%);
-  color: white;
-  font-size: 10px;
-  font-weight: 600;
-  letter-spacing: 0.02em;
-  text-align: center;
+/* ============================================================
+   SPONSORS — white strip at the bottom of the dark scene
+   ============================================================ */
+.scene__sponsors {
+  margin-top: auto;
+  background: #ffffff;
+  border-radius: 18px 18px 0 0;
+  padding: 12px 28px 14px;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 22px;
+  align-items: center;
+  /* Negative margin to extend to scene edges past the scene padding */
+  margin-left: -36px;
+  margin-right: -36px;
+}
+.sponsor-group {
   display: flex;
   flex-direction: column;
+  gap: 5px;
+}
+.sponsor-group__label {
+  font-size: 10px;
+  font-weight: 700;
+  color: #2a2a4a;
+  letter-spacing: 0.04em;
+}
+.sponsor-group__logos {
+  display: flex;
   align-items: center;
-  justify-content: center;
-  gap: 6px;
-  padding: 6px;
+  gap: 12px;
 }
-.badge__url-arrow {
-  width: 36px; height: 36px;
-  background: white;
-  border-radius: 999px;
-  display: flex; align-items: center; justify-content: center;
-  box-shadow: 0 4px 10px -2px rgba(0,0,0,0.25);
+.sponsor-logo {
+  height: 34px;
+  width: auto;
+  max-width: 100px;
+  display: block;
+  object-fit: contain;
 }
-.badge__url span { font-size: 10px; }

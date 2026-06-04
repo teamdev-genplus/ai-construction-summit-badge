@@ -26,7 +26,7 @@
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/cropperjs@1.6.2/dist/cropper.min.css" />
 <script src="https://cdn.jsdelivr.net/npm/cropperjs@1.6.2/dist/cropper.min.js"></script>
 
-<link rel="stylesheet" href="styles.css?v=18" />
+<link rel="stylesheet" href="styles.css?v=v2.3" />
 </head>
 <body>
 <header class="topbar">
@@ -75,27 +75,6 @@
         </div>
       </div>
 
-      <div class="field">
-        <span class="field__label">Formato del badge</span>
-        <div class="ratio-toggle" role="radiogroup" aria-label="Formato del badge">
-          <input type="radio" name="ratio" id="ratio45" value="4-5" checked />
-          <label for="ratio45" class="ratio-toggle__opt">
-            <span class="ratio-toggle__icon ratio-toggle__icon--45"></span>
-            <span class="ratio-toggle__txt">
-              <strong>4:5 vertical</strong>
-              <small>1080×1350 · Instagram / Stories</small>
-            </span>
-          </label>
-          <input type="radio" name="ratio" id="ratio11" value="1-1" />
-          <label for="ratio11" class="ratio-toggle__opt">
-            <span class="ratio-toggle__icon ratio-toggle__icon--11"></span>
-            <span class="ratio-toggle__txt">
-              <strong>1:1 cuadrado</strong>
-              <small>1080×1080 · LinkedIn / WhatsApp</small>
-            </span>
-          </label>
-        </div>
-      </div>
 
       <div class="actions">
         <button type="button" id="downloadBtn" class="btn btn--primary">
@@ -125,12 +104,26 @@
   <section class="preview-panel">
     <div class="preview-wrap">
       <div class="badge-frame" id="badgeFrame">
-      <div id="badge" class="badge badge--4-5">
-        <!-- LEFT COLUMN: photo (top) + info (bottom) -->
-        <div class="badge__left">
-          <div class="badge__photo-wrap">
-            <div class="badge__photo" id="badgePhoto">
-              <div class="badge__photo-placeholder">
+      <div id="badge" class="scene">
+        <!-- Hashtag floating top-right of the dark scene -->
+        <span class="scene__hashtag">#AICS2026</span>
+
+        <!-- White badge card -->
+        <div class="card">
+          <!-- Decorative metal clip on top -->
+          <div class="card__clip" aria-hidden="true">
+            <div class="card__clip-hole"></div>
+          </div>
+
+          <!-- Top logo: AI Construction Summit 2026 in color (not white). Uses cleaned SVG (no internal drop-shadows) for crisp render on white card. -->
+          <div class="card__logo">
+            <img src="assets/summit_logo_clean.svg" alt="AI Construction Summit 2026" />
+          </div>
+
+          <!-- Photo (rectangular, centered) -->
+          <div class="card__photo-wrap">
+            <div class="card__photo" id="badgePhoto">
+              <div class="card__photo-placeholder">
                 <svg width="56" height="56" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="4"/><path d="M4 21c0-4.4 3.6-8 8-8s8 3.6 8 8"/></svg>
                 <span>Tu foto aquí</span>
               </div>
@@ -139,36 +132,54 @@
               <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4 12.5-12.5z"/></svg>
               <span>Editar foto</span>
             </button>
-            <div class="badge__orga">Organizado por: Colegio de Ingenieros del Perú y AECODE</div>
           </div>
-          <div class="badge__info">
-            <p class="badge__role-tag">Soy Asistente</p>
-            <h2 class="badge__name"><span class="badge__name-first" id="badgeFirstName">Fabrizio</span><span class="badge__name-rest" id="badgeLastName">Villafuerte Diaz</span></h2>
-            <p class="badge__job"><span id="badgeRole" class="badge__job-line"></span><span id="badgeCompany" class="badge__job-line"></span></p>
-          </div>
-        </div>
 
-        <!-- RIGHT COLUMN: vertical logo band (top) + date (mid) + url (bottom) -->
-        <div class="badge__right">
-          <div class="badge__brand">
-            <img src="assets/summit_logo.svg" alt="AI Construction Summit 2026" />
-          </div>
-          <div class="badge__date">
-            <p class="badge__date-day">17 y 18</p>
-            <p class="badge__date-month">Julio</p>
-            <p class="badge__date-venue">Auditorio CIP Lima</p>
-          </div>
-          <div class="badge__url">
-            <div class="badge__url-arrow">
-              <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#7C3AED" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"/></svg>
+          <!-- Info row: name (LEFT) + cargo/empresa/ASISTENTE pill (RIGHT) -->
+          <div class="card__info">
+            <h2 class="card__name" id="badgeName">YUDELY PALPÁN FLORES</h2>
+            <div class="card__meta">
+              <p class="card__role" id="badgeRole">Coordinadora de Proyectos de Tecnología</p>
+              <p class="card__company" id="badgeCompany">AECODE</p>
+              <span class="card__pill">ASISTENTE</span>
             </div>
-            <span>aecode.ai/summit</span>
+          </div>
+
+          <!-- Bottom bar: URL CTA (LEFT, blue gradient) + Date (RIGHT, dark) -->
+          <div class="card__bottom">
+            <div class="card__cta">
+              <p>Yo me sumé a la IA.</p>
+              <p>Hazlo tu también en:</p>
+              <p class="card__cta-url">www.aecode.ai/summit</p>
+            </div>
+            <div class="card__date">
+              <p class="card__date-day">17 - 18</p>
+              <p class="card__date-month">JULIO 2026</p>
+              <p class="card__date-venue">Auditorio CIP,<br/>San Isidro - Lima</p>
+            </div>
+          </div>
+        </div>
+
+        <!-- Bottom sponsors strip — white pill at the bottom of the dark scene -->
+        <div class="scene__sponsors">
+          <div class="sponsor-group">
+            <span class="sponsor-group__label">Organizan:</span>
+            <div class="sponsor-group__logos">
+              <img src="assets/sponsors/cip.svg" alt="CIP Lima" class="sponsor-logo" />
+              <img src="assets/sponsors/aecode.svg" alt="AECODE" class="sponsor-logo" />
+            </div>
+          </div>
+          <div class="sponsor-group">
+            <span class="sponsor-group__label">Respaldan:</span>
+            <div class="sponsor-group__logos">
+              <img src="assets/sponsors/ccl.svg" alt="CCL" class="sponsor-logo" />
+              <img src="assets/sponsors/proinnovate.svg" alt="PRO Innóvate" class="sponsor-logo" />
+            </div>
           </div>
         </div>
       </div>
 
       </div>
-      <p class="preview-help">Vista previa en vivo · al descargar se exporta en 1080×1350 (4:5) o 1080×1080 (1:1).</p>
+      <p class="preview-help">Vista previa en vivo · al descargar se exporta en 1080×1350 px para Instagram / LinkedIn.</p>
     </div>
   </section>
 </main>
@@ -213,6 +224,6 @@
   </div>
 </div>
 
-<script src="app.js?v=14"></script>
+<script src="app.js?v=v2.2"></script>
 </body>
 </html>
