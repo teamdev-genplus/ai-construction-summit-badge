@@ -86,8 +86,8 @@
 
   // ----- CROPPER MODAL -----
   function currentPhotoAspect() {
-    // v2 design: photo wrap has CSS aspect-ratio 5/4 (landscape per mockup).
-    return 5 / 4;
+    // v3 design: photo slot in background_v3.png is 550x525 at 1080x1350.
+    return 550 / 525;
   }
 
   function openCropper(srcDataUrl) {
@@ -260,8 +260,10 @@
       await new Promise((r) => requestAnimationFrame(() => requestAnimationFrame(r)));
 
       // modern-screenshot has Safari-specific fixes baked in (fixSvgXmlDecode, drawImageInterval).
+      // v3 uses scale 1 because background_v3.png is already native 1080x1350. Scaling up
+      // would upscale the PNG (lossy). Slots are crisp at any scale (text + photo render fresh).
       const opts = {
-        scale: 2,
+        scale: 1,
         width: w,
         height: h,
         backgroundColor: 'transparent',

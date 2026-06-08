@@ -404,67 +404,131 @@ body {
 
 /* ============================================================
    BADGE FRAME — responsive scale wrapper.
-   Authored size: 600x750 (4:5). Export via 2x = 1200x1500 ≈ 1080x1350 target.
-   transform: scale(100cqw / 600px) shrinks the visual preview without
-   changing the DOM layout box → export quality preserved.
+   v3 authored size: 1080x1350 (matches background PNG native size).
+   transform: scale(100cqw / 1080px) shrinks visually for preview, DOM stays at 1080.
+   html-to-image exports at scale 1 → native 1080x1350 (perfect for IG/LinkedIn).
    ============================================================ */
 .badge-frame {
   width: 100%;
-  max-width: 600px;
+  max-width: 540px;          /* preview cap; bigger frame = bigger preview if container allows */
   container-type: inline-size;
   position: relative;
   aspect-ratio: 4 / 5;
 }
-.badge-frame > .scene {
+.badge-frame > .scene-v3 {
   position: absolute;
   top: 0;
   left: 0;
-  width: 600px;
-  height: 750px;
-  transform: scale(calc(100cqw / 600px));
+  width: 1080px;
+  height: 1350px;
+  transform: scale(calc(100cqw / 1080px));
   transform-origin: top left;
 }
 
 /* ============================================================
-   SCENE — the EXPORT target (dark bg + card + sponsors)
+   SCENE V3 — background image + absolutely-positioned dynamic slots.
+   Authored at 1080x1350 (native PNG dims). All slot coordinates are
+   in PIXELS at 1080x1350 reference (measured from the Yudely mockup).
    ============================================================ */
-.scene {
-  background: linear-gradient(135deg, #0d0938 0%, #2d1b69 45%, #4c1d95 85%, #6d28d9 100%);
+.scene-v3 {
+  position: relative;
+  font-family: 'Inter', sans-serif;
   border-radius: 16px;
   overflow: hidden;
-  padding: 18px 36px 0;
-  font-family: 'Inter', sans-serif;
-  display: flex;
-  flex-direction: column;
   box-shadow: var(--shadow-lg);
-  color: white;
+  background: #1a1247;        /* fallback while PNG loads */
 }
-.scene__hashtag {
+.scene-v3__bg {
   position: absolute;
-  top: 22px;
-  right: 30px;
-  color: #ffffff;
-  font-size: 19px;
-  font-weight: 700;
-  font-style: italic;
-  letter-spacing: 0.01em;
-  z-index: 3;
-  text-shadow: 0 2px 4px rgba(0,0,0,0.35);
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  display: block;
+  user-select: none;
+  pointer-events: none;
 }
 
-/* ============================================================
-   CARD — the white badge that sits centered in the scene
-   ============================================================ */
-.card {
-  margin: 36px auto 14px;
-  width: 410px;
-  background: #ffffff;
-  border-radius: 14px;
-  position: relative;
-  padding: 28px 22px 0;
-  box-shadow: 0 22px 50px -22px rgba(0,0,0,0.55);
+/* Dynamic slots */
+.slot {
+  position: absolute;
+  margin: 0;
+  box-sizing: border-box;
+}
+
+/* ----- Photo slot ----- */
+.slot--photo {
+  /* Approximate slot of the photo frame in the background (1080x1350 coords) */
+  top: 240px;
+  left: 265px;
+  width: 550px;
+  height: 525px;
+  border-radius: 6px;
+  overflow: hidden;
+  background: transparent;
+}
+.slot--photo img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+.slot--photo__placeholder {
+  position: absolute;
+  inset: 0;
   display: flex;
   flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 14px;
+  color: #9c9aa6;
+  font-size: 22px;
+  font-weight: 500;
+}
+.slot--photo__placeholder svg { width: 84px; height: 84px; }
+
+/* ----- Name slot (uppercase, 3 lines, left-aligned) — measured Y=822 in reference ----- */
+.slot--name {
+  top: 822px;
+  left: 245px;
+  width: 350px;
+  font-size: 56px;
+  font-weight: 800;
+  line-height: 1.04;
+  letter-spacing: -0.01em;
+  color: #0a0a23;
+  text-transform: uppercase;
+  word-break: break-word;
+}
+
+/* ----- Cargo slot (right-aligned, multi-line ok) — measured Y=808 in reference ----- */
+.slot--role {
+  top: 808px;
+  right: 240px;
+  width: 340px;
+  font-size: 25px;
+  font-weight: 500;
+  line-height: 1.25;
+  color: #2a2a4a;
+  text-align: right;
+}
+.slot--role:empty { display: none; }
+
+/* ----- Empresa slot — measured Y=855 in reference (right above ASISTENTE pill at Y=896) ----- */
+.slot--company {
+  top: 855px;
+  right: 240px;
+  width: 340px;
+  font-size: 26px;
+  font-weight: 800;
+  line-height: 1.2;
+  color: #0a0a23;
+  text-align: right;
+  letter-spacing: 0.01em;
+}
+.slot--company:empty { display: none; }
+/* (v2 card / scene__hashtag rules removed — replaced by static background PNG in v3) */
+.card {
+  display: none;
 }
 
 /* ----- Decorative metal clip on top of the card ----- */

@@ -23,3 +23,6 @@ node_modules/
 # Local environment
 .env
 .env.local
+
+# v3 reference (contains real-person photo — do NOT publish)
+assets/background_v3_reference.png
