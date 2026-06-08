@@ -469,12 +469,12 @@ body {
   box-sizing: border-box;
 }
 
-/* ----- Photo slot — measured against actual photo bounds in reference ----- */
+/* ----- Photo slot — measured: photo frame spans (265,225)..(810,775) accounting for -2° rotation ----- */
 .slot--photo {
-  top: 215px;
-  left: 260px;
-  width: 565px;
-  height: 565px;
+  top: 225px;
+  left: 265px;
+  width: 545px;
+  height: 535px;
   border-radius: 6px;
   overflow: hidden;
   background: transparent;
