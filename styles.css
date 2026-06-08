@@ -517,12 +517,12 @@ body {
   /* NO overflow:hidden — let descenders breathe; if a 4-line edge case appears it'll show fully */
 }
 
-/* ----- Meta block — cargo + AECODE flow naturally, AECODE always 6px below cargo regardless of line count ----- */
+/* ----- Meta block — cargo + AECODE flow naturally. v3.28: more right margin, width allows wrap for "Coordinador" without breaking long cargo to 3 lines. ----- */
 .slot--meta {
   top: 807px;
-  right: 260px;     /* QA fix v3.26: was 240 - rotation pushed text 9px past card edge. +20 shift left for safety margin */
-  width: 300px;
-  max-width: 300px;
+  right: 285px;     /* +25 from v3.26 — more buffer from card right edge */
+  width: 260px;     /* sweet spot: forces wrap for "Coordinador de Proyectos" but keeps "Coordinadora de Proyectos de Tecnología" at 2 lines */
+  max-width: 260px;
   text-align: right;
 }
 .slot--meta__role {
