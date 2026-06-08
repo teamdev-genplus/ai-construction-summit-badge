@@ -520,9 +520,9 @@ body {
 /* ----- Meta block — cargo + AECODE flow naturally, AECODE always 6px below cargo regardless of line count ----- */
 .slot--meta {
   top: 807px;
-  right: 240px;
-  width: 320px;
-  max-width: 320px;
+  right: 260px;     /* QA fix v3.26: was 240 - rotation pushed text 9px past card edge. +20 shift left for safety margin */
+  width: 300px;
+  max-width: 300px;
   text-align: right;
 }
 .slot--meta__role {
