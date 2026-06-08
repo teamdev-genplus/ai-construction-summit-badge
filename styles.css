@@ -448,11 +448,14 @@ body {
   pointer-events: none;
 }
 
-/* Dynamic slots */
+/* Dynamic slots — rotated 2° clockwise to match the lanyard tilt baked into background_v3.png.
+   Tilt was measured by scanning the white card's left edge: 37px drift over 1050px height = +2°. */
 .slot {
   position: absolute;
   margin: 0;
   box-sizing: border-box;
+  transform: rotate(2deg);
+  transform-origin: center center;
 }
 
 /* ----- Photo slot ----- */
@@ -502,12 +505,12 @@ body {
 
 /* ----- Cargo slot (right-aligned, multi-line ok) — measured Y=808 in reference ----- */
 .slot--role {
-  top: 808px;
+  top: 800px;
   right: 240px;
-  width: 340px;
-  font-size: 25px;
+  width: 320px;
+  font-size: 22px;     /* sized so "Coordinadora de Proyectos" fits on one line, "de Tecnología" on the next */
   font-weight: 500;
-  line-height: 1.25;
+  line-height: 1.3;
   color: #2a2a4a;
   text-align: right;
 }
