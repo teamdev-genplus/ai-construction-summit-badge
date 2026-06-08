@@ -517,38 +517,36 @@ body {
   /* NO overflow:hidden — let descenders breathe; if a 4-line edge case appears it'll show fully */
 }
 
-/* ----- Cargo slot — iter 3: font 20->24 to match ref text width (was 37px shorter) ----- */
-.slot--role {
+/* ----- Meta block — cargo + AECODE flow naturally, AECODE always 6px below cargo regardless of line count ----- */
+.slot--meta {
   top: 807px;
   right: 240px;
   width: 320px;
   max-width: 320px;
-  font-size: 22px;        /* iter 8 final: width 320 keeps cargo on 2 lines like ref */
+  text-align: right;
+}
+.slot--meta__role {
+  margin: 0;
+  font-size: 22px;
   font-weight: 500;
   line-height: 1.25;
   color: #2a2a4a;
   text-align: right;
-  overflow: hidden;
 }
-.slot--role:empty { display: none; }
-
-/* ----- Empresa slot — gap=30px from cargo (measured in reference) ----- */
-.slot--company {
-  top: 856px;
-  right: 240px;
-  width: 300px;
-  max-width: 300px;
-  font-size: 28px;        /* iter 5: bumped from 22 to fix +21 offset (text needs to be wider) */
+.slot--meta__role:empty { display: none; }
+.slot--meta__company {
+  margin: 6px 0 0;
+  font-size: 24px;
   font-weight: 800;
-  line-height: 1.2;
+  line-height: 1.1;
   color: #0a0a23;
-  text-align: right;
   letter-spacing: 0.01em;
-  overflow: hidden;
+  text-align: right;
   white-space: nowrap;
+  overflow: hidden;
   text-overflow: ellipsis;
 }
-.slot--company:empty { display: none; }
+.slot--meta__company:empty { display: none; }
 /* (v2 card / scene__hashtag rules removed — replaced by static background PNG in v3) */
 .card {
   display: none;
