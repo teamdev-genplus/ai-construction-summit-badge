@@ -501,11 +501,11 @@ body {
 
 /* ----- Name slot (uppercase, up to 3 lines, left-aligned) ----- */
 .slot--name {
-  top: 795px;              /* nudged up so 3-line names don't get clipped at bottom */
+  top: 811px;              /* iter 2: was 795 → -16 offset, shift +16 to match ref */
   left: 262px;
   width: 340px;
   max-width: 340px;
-  font-size: 44px;         /* shrunk from 46 to give descenders more room */
+  font-size: 44px;
   font-weight: 800;
   line-height: 1.02;
   letter-spacing: -0.02em;
@@ -517,9 +517,9 @@ body {
   /* NO overflow:hidden — let descenders breathe; if a 4-line edge case appears it'll show fully */
 }
 
-/* ----- Cargo slot — tight max-width to prevent right-edge spill ----- */
+/* ----- Cargo slot — iter 2: top 800 → 807 (+7 to match REF=805) ----- */
 .slot--role {
-  top: 800px;
+  top: 807px;
   right: 240px;
   width: 260px;
   max-width: 260px;
@@ -532,13 +532,13 @@ body {
 }
 .slot--role:empty { display: none; }
 
-/* ----- Empresa slot — sits right above the ASISTENTE pill ----- */
+/* ----- Empresa slot — gap=30px from cargo (measured in reference) ----- */
 .slot--company {
-  top: 870px;
+  top: 840px;             /* iter 2: was 855 → +15 offset, shift -15 to match ref */
   right: 240px;
   width: 260px;
   max-width: 260px;
-  font-size: 22px;        /* shrunk from 26 for consistent sizing */
+  font-size: 22px;
   font-weight: 800;
   line-height: 1.2;
   color: #0a0a23;
