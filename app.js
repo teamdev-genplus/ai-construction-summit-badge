@@ -86,8 +86,8 @@
 
   // ----- CROPPER MODAL -----
   function currentPhotoAspect() {
-    // v3 design: photo slot 545x535 measured from actual photo frame in reference.
-    return 545 / 535;
+    // v3.14: photo slot 545x520.
+    return 545 / 520;
   }
 
   function openCropper(srcDataUrl) {
