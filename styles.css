@@ -173,28 +173,28 @@ body {
 /* ----------- EDIT PHOTO BUTTON (floats over badge photo) ----------- */
 .edit-photo-btn {
   position: absolute;
-  top: 10px;
-  left: 10px;
+  top: 14px;
+  left: 14px;
   z-index: 3;
   display: inline-flex;
   align-items: center;
-  gap: 6px;
-  padding: 7px 12px;
+  gap: 8px;
+  padding: 11px 18px;
   font: inherit;
-  font-size: 12px;
-  font-weight: 600;
+  font-size: 15px;
+  font-weight: 700;
   color: #0a0a23;
-  background: rgba(255,255,255,0.94);
+  background: rgba(255,255,255,0.96);
   border: none;
   border-radius: 999px;
   cursor: pointer;
-  box-shadow: 0 4px 12px -4px rgba(15,12,41,0.4);
-  backdrop-filter: blur(4px);
+  box-shadow: 0 6px 16px -4px rgba(15,12,41,0.45);
+  backdrop-filter: blur(6px);
   transition: transform .12s ease, background .12s ease;
 }
 .edit-photo-btn:hover { background: white; transform: translateY(-1px); }
 .edit-photo-btn[hidden] { display: none; }
-.edit-photo-btn svg { color: var(--grad-violet); }
+.edit-photo-btn svg { color: var(--grad-violet); width: 18px; height: 18px; }
 
 /* ----------- MODAL ----------- */
 .modal {
