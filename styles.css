@@ -469,13 +469,12 @@ body {
   box-sizing: border-box;
 }
 
-/* ----- Photo slot ----- */
+/* ----- Photo slot — measured against actual photo bounds in reference ----- */
 .slot--photo {
-  /* Approximate slot of the photo frame in the background (1080x1350 coords) */
-  top: 240px;
-  left: 265px;
-  width: 550px;
-  height: 525px;
+  top: 215px;
+  left: 260px;
+  width: 565px;
+  height: 565px;
   border-radius: 6px;
   overflow: hidden;
   background: transparent;

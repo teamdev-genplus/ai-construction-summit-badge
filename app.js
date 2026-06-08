@@ -86,8 +86,8 @@
 
   // ----- CROPPER MODAL -----
   function currentPhotoAspect() {
-    // v3 design: photo slot in background_v3.png is 550x525 at 1080x1350.
-    return 550 / 525;
+    // v3 design: photo slot now 565x565 (square) to match the actual photo bounds in the background.
+    return 1;
   }
 
   function openCropper(srcDataUrl) {
