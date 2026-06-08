@@ -448,14 +448,25 @@ body {
   pointer-events: none;
 }
 
-/* Dynamic slots — rotated 2° clockwise to match the lanyard tilt baked into background_v3.png.
-   Tilt was measured by scanning the white card's left edge: 37px drift over 1050px height = +2°. */
+/* Slot layer: rotates as a GROUP around the card's clip pivot (540, 80 px in 1080x1350 coords).
+   This makes the whole text+photo block translate AND tilt together, exactly like the card
+   content baked into background_v3.png. Per-slot rotation around its own center caused
+   ~35px misalignment because the slot position is in unrotated coord space but the card pivot
+   is at the clip — pieces near the bottom of the card shift more than pieces near the top. */
+.slot-layer {
+  position: absolute;
+  inset: 0;
+  /* -2deg = CCW because card left edge goes from x=230(top) to x=261(bottom),
+     which means BOTTOM is to the right of TOP = CCW rotation in screen coords.
+     CSS rotate(2deg) is CW which is the OPPOSITE direction. */
+  transform: rotate(-2deg);
+  transform-origin: 540px 80px;
+}
+
 .slot {
   position: absolute;
   margin: 0;
   box-sizing: border-box;
-  transform: rotate(2deg);
-  transform-origin: center center;
 }
 
 /* ----- Photo slot ----- */
@@ -489,14 +500,14 @@ body {
 }
 .slot--photo__placeholder svg { width: 84px; height: 84px; }
 
-/* ----- Name slot (uppercase, 3 lines, left-aligned) — measured Y=822 in reference ----- */
+/* ----- Name slot (uppercase, 3 lines, left-aligned) ----- */
 .slot--name {
-  top: 822px;
-  left: 245px;
+  top: 802px;        /* was 822, shifted up after group rotation moved things down */
+  left: 262px;       /* was 245, shifted right to match reference */
   width: 350px;
   font-size: 56px;
   font-weight: 800;
-  line-height: 1.04;
+  line-height: 0.97; /* tightened so PALPAN/FLORES don't drift below reference */
   letter-spacing: -0.01em;
   color: #0a0a23;
   text-transform: uppercase;
@@ -516,10 +527,10 @@ body {
 }
 .slot--role:empty { display: none; }
 
-/* ----- Empresa slot — measured Y=855 in reference (right above ASISTENTE pill at Y=896) ----- */
+/* ----- Empresa slot — sits right above the ASISTENTE pill ----- */
 .slot--company {
-  top: 855px;
-  right: 240px;
+  top: 845px;        /* nudged up after group rotation */
+  right: 230px;      /* nudged right (decrease right value = move right edge to the right) */
   width: 340px;
   font-size: 26px;
   font-weight: 800;
